@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#23395d">
+<title>Daily Target • Banking Prep</title>
+<style>
+:root{--navy:#23395d;--blue:#4169a8;--gold:#e6b85c;--cream:#fffaf0;--paper:#fff;--ink:#263142;--muted:#758096;--line:#e7e2d8;--green:#3d9b69;--red:#c96a63;--soft:#f3f0e8}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f8f5ed,#eef2f7);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:850px;margin:auto;padding:0 14px}
+header{background:var(--navy);color:white;padding:24px 0 20px;border-bottom:4px solid var(--gold)}
+.brand{font-size:13px;letter-spacing:2px;text-transform:uppercase;opacity:.8}.title{font-size:29px;font-weight:800;margin:3px 0}.date{color:#f5d98b;font-weight:700}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;margin:15px 0;padding:17px;box-shadow:0 5px 18px #24395d12}
+.hero{display:flex;justify-content:space-between;gap:12px;align-items:center}.streak{background:#fff4d7;border:1px solid #efd58c;color:#6f5315;padding:10px 13px;border-radius:14px;text-align:center;min-width:95px}.streak b{display:block;font-size:22px}
+h2{font-size:19px;margin:0 0 12px;color:var(--navy)}h3{margin:0 0 7px;font-size:15px}
+.progress{height:13px;background:#ece9e0;border-radius:99px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));width:0;transition:.3s}
+.progressText{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:7px}
+.task{display:flex;align-items:flex-start;gap:11px;padding:12px 10px;border-bottom:1px dashed var(--line)}.task:last-child{border:0}.task input{width:21px;height:21px;accent-color:var(--green);flex:none}.task.done .txt{text-decoration:line-through;color:var(--muted)}
+.group{border:1px solid var(--line);border-radius:14px;padding:4px 10px;margin:10px 0;background:#fffdf8}
+.message{border-radius:14px;padding:13px 14px;margin-top:13px;background:var(--soft);font-weight:650}.message.good{background:#eaf7ef;color:#246441}.message.keep{background:#fff2ef;color:#914d48}
+.countdowns{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.exam{border:1px solid var(--line);border-radius:13px;padding:11px;background:#fcfbf7}.exam b{display:block;color:var(--navy)}.exam span{font-size:13px;color:var(--muted)}
+.nav{display:flex;gap:8px;overflow:auto;padding:4px 0 12px}.nav button{white-space:nowrap}
+button{border:0;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer}.nav button{background:#fff;border:1px solid var(--line);color:var(--ink)}.nav button.active{background:var(--navy);color:#fff}.primary{background:var(--blue);color:#fff}.secondary{background:#eeeae1}.danger{background:#fff0ee;color:#a84b45}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:block;font-weight:650;margin:11px 0 5px}input,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}textarea{min-height:70px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.history{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+small{color:var(--muted)}.hint{font-size:12px;color:var(--muted);margin-top:8px}
+@media(max-width:600px){.countdowns{grid-template-columns:1fr}.hero{align-items:flex-start}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="brand">Banking Exam Preparation</div><div class="title">Daily Target</div>
+<div id="date" class="date"></div>
+</div></header>
+
+<main class="wrap">
+<section class="card hero"><div><h2 style="margin-bottom:4px">Today's Mission</h2><div id="welcome">Small steps. Serious progress.</div></div><div class="streak"><b id="streak">0 🔥</b><small>day streak</small></div></section>
+
+<section class="card"><h2>Daily Checklist</h2>
+<div id="groups"></div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div class="progressText"><span id="pct">0% complete</span><span id="done">0 / 0</span></div>
+<div id="message" class="message"></div>
+</section>
+
+<section class="card"><h2>⏳ Exams Countdown</h2><div id="exams" class="countdowns"></div></section>
+
+<section class="card"><h2>Record Today's Performance</h2>
+<div class="row"><div><label>Questions attempted</label><input id="attempted" type="number" min="0"></div><div><label>Correct</label><input id="correct" type="number" min="0"></div></div>
+<div class="row"><div><label>Study time (minutes)</label><input id="minutes" type="number" min="0"></div><div><label>Mock / test score</label><input id="score" placeholder="e.g. 72/100"></div></div>
+<label>Notes / mistakes to revisit</label><textarea id="notes" placeholder="Write what you learned, what went wrong, what to revise tomorrow..."></textarea>
+<div class="actions"><button class="primary" onclick="save()">Save today's record</button></div>
+</section>
+
+<section class="card"><h2>📅 Your Previous Days</h2>
+<div class="nav" id="days"></div>
+<div id="history"></div>
+<div class="actions"><button class="secondary" onclick="exportData()">Backup records</button><button class="secondary" onclick="document.getElementById('import').click()">Restore backup</button><input id="import" type="file" accept=".json" hidden onchange="importData(event)"></div>
+<div class="hint">Your records are saved in this browser. Backup if you change device/browser.</div>
+</section>
+</main>
+
+<script>
+const KEY="dailyTargetCharm_v2";
+const start="2026-08-06",end="2026-08-31";
+const groups=[
+ ["Core Checklist",["Quant","Reasoning","English","General Awareness / Banking Awareness","Mock / Sectional Test"]],
+ ["Guidely Questions",["Guidely Questions"]],
+ ["Detailed Videos",["Detailed Videos"]]
+];
+const exams=[
+ ["IBPS PO Prelims","2026-08-22"],["SBI PO Mains","2026-09-12"],["IBPS PO Mains","2026-10-04"],["RRB PO Prelims","2026-11-21"],["RRB PO Mains","2026-12-20"]
+];
+let selected=localStorage.getItem("selectedDay")||new Date().toISOString().slice(0,10);
+function getDB(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+function put(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function makeDay(k){let d=getDB();if(!d[k]){let tasks=[];groups.forEach(g=>g[1].forEach(t=>tasks.push({group:g[0],text:t,done:false})));d[k]={tasks,attempted:"",correct:"",minutes:"",score:"",notes:""};put(d)}return d[k]}
+function fmt(k){return new Date(k+"T00:00:00").toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})}
+function daysLeft(k){let a=new Date(k+"T00:00:00"),b=new Date();b.setHours(0,0,0,0);return Math.ceil((a-b)/86400000)}
+function render(){
+ if(selected<start||selected>end)selected=start;
+ let d=makeDay(selected);document.getElementById("date").textContent=fmt(selected);
+ let html="";groups.forEach(g=>{html+=`<div class="group"><h3>${g[0]}</h3>`;d.tasks.filter(t=>t.group===g[0]).forEach((t,i)=>{let idx=d.tasks.indexOf(t);html+=`<div class="task ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggle(${idx})"><div class="txt">${esc(t.text)}</div></div>`});html+="</div>"});document.getElementById("groups").innerHTML=html;
+ let n=d.tasks.length,z=d.tasks.filter(x=>x.done).length,p=n?Math.round(z/n*100):0;document.getElementById("bar").style.width=p+"%";document.getElementById("pct").textContent=p+"% complete";document.getElementById("done").textContent=z+" / "+n;
+ document.getElementById("message").className="message "+(p===100?"good":"keep");document.getElementById("message").textContent=p===100?"🏆 Outstanding! You finished everything for this day. Protect the streak.":p>=70?"💪 Strong work. Finish the remaining targets and make tomorrow even better.":"🌱 No perfect days required. Get the next task done — tomorrow is another chance.";
+ ["attempted","correct","minutes","score","notes"].forEach(id=>document.getElementById(id).value=d[id]||"");
+ renderExams();renderDays();renderHistory();document.getElementById("streak").textContent=streak()+" 🔥";
+}
+function toggle(i){let d=getDB();d[selected].tasks[i].done=!d[selected].tasks[i].done;put(d);render()}
+function save(){let d=getDB(),x=d[selected];["attempted","correct","minutes","score","notes"].forEach(id=>x[id]=document.getElementById(id).value);d[selected]=x;put(d);render()}
+function renderExams(){document.getElementById("exams").innerHTML=exams.map(e=>{let n=daysLeft(e[1]);let text=n>0?n+" days to go":n===0?"Today!":Math.abs(n)+" days ago";return`<div class="exam"><b>${e[0]}</b><span>${fmt(e[1])} · <strong>${text}</strong></span></div>`}).join("")}
+function renderDays(){let a=[];for(let d=new Date(start+"T00:00:00");d<=new Date(end+"T00:00:00");d.setDate(d.getDate()+1)){let k=d.toISOString().slice(0,10);a.push(`<button class="${k===selected?"active":""}" onclick="selectDay('${k}')">${d.getDate()} Aug</button>`)}document.getElementById("days").innerHTML=a.join("")}
+function selectDay(k){selected=k;localStorage.setItem("selectedDay",k);render();window.scrollTo({top:0,behavior:"smooth"})}
+function renderHistory(){let db=getDB(),ks=Object.keys(db).filter(k=>k>=start&&k<=end).sort().reverse();if(!ks.length){document.getElementById("history").innerHTML="<small>No records yet.</small>";return}document.getElementById("history").innerHTML=`<table><tr><th>Date</th><th>Done</th><th>Accuracy</th><th>Study</th><th>Score</th></tr>${ks.map(k=>{let d=db[k],n=d.tasks.length,z=d.tasks.filter(t=>t.done).length,a=+d.attempted;return`<tr onclick="selectDay('${k}')" style="cursor:pointer"><td>${fmt(k)}</td><td>${n?Math.round(z/n*100):0}%</td><td>${a?Math.round((+d.correct/a)*100)+"%":"—"}</td><td>${d.minutes||0}m</td><td>${esc(d.score||"—")}</td></tr>`}).join("")}</table>`}
+function streak(){let db=getDB(),s=0,d=new Date();if(d<new Date(start+"T00:00:00"))return 0;for(;;){let k=d.toISOString().slice(0,10),x=db[k];if(!x)break;let n=x.tasks.length;if(!n||x.tasks.some(t=>!t.done))break;s++;d.setDate(d.getDate()-1)}return s}
+function exportData(){let b=new Blob([JSON.stringify(getDB(),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="daily-target-backup.json";a.click()}
+function importData(e){let r=new FileReader();r.onload=()=>{try{put(JSON.parse(r.result));render();alert("Backup restored.")}catch(_){alert("Invalid backup.")}};r.readAsText(e.target.files[0])}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+render();
+</script>
+</body>
+</html>
