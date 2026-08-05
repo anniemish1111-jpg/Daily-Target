@@ -1,406 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#315efb">
-<meta name="description" content="Daily banking exam preparation tracker for August 2026">
-<title>Daily Target — August 2026</title>
+<title>Daily Target — Banking Exam</title>
 <style>
-  :root {
-    --bg: #f5f7fb;
-    --card: #ffffff;
-    --ink: #182230;
-    --muted: #6b7280;
-    --line: #e5e7eb;
-    --accent: #315efb;
-    --accent-soft: #eef2ff;
-    --done: #16834b;
-    --done-soft: #eaf8f0;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-  }
-  .app { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
-  header { margin-bottom: 18px; }
-  .eyebrow { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
-  h1 { margin: 5px 0 4px; font-size: 30px; }
-  .subtitle { color: var(--muted); margin: 0; }
-  .datebar {
-    display: flex; gap: 8px; align-items: center; margin: 20px 0 14px;
-  }
-  button, select {
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font: inherit;
-    cursor: pointer;
-  }
-  button:hover { border-color: #b9c2d0; }
-  .today-btn { margin-left: auto; }
-  select { flex: 1; min-width: 0; font-weight: 650; }
-  .progress-card {
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    padding: 16px; margin-bottom: 14px;
-  }
-  .progress-top { display:flex; justify-content:space-between; gap:12px; align-items:center; }
-  .progress-number { font-size: 22px; font-weight: 800; }
-  .progress-label { color: var(--muted); font-size: 13px; }
-  .bar { height: 8px; background:#edf0f4; border-radius:99px; overflow:hidden; margin-top:11px; }
-  .fill { height:100%; width:0; background:var(--accent); border-radius:99px; transition:.2s; }
-  .section {
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    margin: 12px 0; overflow: hidden;
-  }
-  .section-title {
-    padding: 13px 16px; background: #fafbfc; border-bottom:1px solid var(--line);
-    font-weight: 800; font-size: 14px; letter-spacing:.02em;
-  }
-  .task {
-    display:flex; align-items:center; gap:12px; padding:15px 16px;
-    border-bottom:1px solid #f0f1f3; min-height:55px;
-  }
-  .task:last-child { border-bottom:0; }
-  .task input { width:20px; height:20px; accent-color:var(--accent); cursor:pointer; flex:0 0 auto; }
-  .task label { cursor:pointer; line-height:1.35; flex:1; }
-  .task.done label { color:var(--muted); text-decoration:line-through; }
-  .subtle { color:var(--muted); font-size:12px; display:block; margin-top:2px; }
-  .history {
-    margin-top:18px; color:var(--muted); font-size:13px; text-align:center;
-  }
-  .actions { display:flex; gap:8px; margin-top:14px; }
-  .danger { color:#b42318; }
-  .note {
-    background: var(--accent-soft); color:#334155; border-radius:12px; padding:12px 14px;
-    font-size:13px; margin-top:14px;
-  }
-  @media (max-width: 520px) {
-    h1 { font-size:26px; }
-    .datebar { flex-wrap:wrap; }
-    select { order: 3; flex-basis:100%; }
-    .today-btn { margin-left:0; }
-  }
-</style>
-
-<link rel="manifest" id="manifestLink">
-<style>
-  .hero {
-    background: linear-gradient(135deg, #315efb 0%, #6d5dfc 100%);
-    color: white; border-radius: 20px; padding: 22px; margin-bottom: 16px;
-    box-shadow: 0 12px 30px rgba(49,94,251,.18);
-  }
-  .hero .eyebrow { color: rgba(255,255,255,.8); }
-  .hero h1 { margin-bottom: 8px; }
-  .hero .subtitle { color: rgba(255,255,255,.85); }
-  .celebration {
-    display:none; margin:14px 0; padding:18px; border-radius:16px;
-    background:var(--done-soft); border:1px solid #bfe8cf; text-align:center;
-  }
-  .celebration.show { display:block; animation:pop .3s ease; }
-  .celebration strong { display:block; font-size:20px; margin-bottom:4px; }
-  .streak-card {
-    background:var(--card); border:1px solid var(--line); border-radius:16px;
-    padding:16px; margin-top:14px; display:flex; justify-content:space-between;
-    align-items:center; gap:12px;
-  }
-  .streak-number { font-size:26px; font-weight:900; color:var(--accent); }
-  .streak-label { color:var(--muted); font-size:12px; }
-  .streak-card .best { text-align:right; }
-  .exam-card {
-    background:var(--card); border:1px solid var(--line); border-radius:16px;
-    padding:16px; margin-top:14px;
-  }
-  .exam-title { font-weight:800; margin-bottom:12px; }
-  .exam-row {
-    display:flex; justify-content:space-between; gap:12px; padding:11px 0;
-    border-bottom:1px solid #f0f1f3; align-items:center;
-  }
-  .exam-row:last-child { border-bottom:0; }
-  .exam-name { font-weight:700; }
-  .exam-date { color:var(--muted); font-size:12px; margin-top:2px; }
-  .days { font-weight:800; color:var(--accent); white-space:nowrap; }
-  .install {
-    background:var(--accent-soft); border:0; color:#263a9b; font-weight:700;
-  }
-  @keyframes pop { from { transform:scale(.98); opacity:.5 } to { transform:scale(1); opacity:1 } }
+:root{--bg:#f5f7fb;--card:#fff;--ink:#182230;--muted:#6b7280;--line:#e5e7eb;--accent:#315efb;--soft:#eef2ff;--done:#16834b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:20px 15px;position:sticky;top:0;z-index:3}.wrap{max-width:850px;margin:auto}
+h1{margin:0;font-size:24px}.sub{color:var(--muted);margin-top:5px}.date{font-weight:700;color:var(--accent)}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px;margin:15px 0;box-shadow:0 2px 10px #00000008}
+.progress{height:11px;background:#e9edf5;border-radius:99px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:var(--accent);transition:.2s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:var(--soft);border-radius:12px;padding:11px;text-align:center}.stat b{display:block;font-size:21px}
+label{display:block;font-weight:650;margin:12px 0 6px}input,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit}textarea{min-height:75px;resize:vertical}
+.task{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0}.task input{width:20px;height:20px;flex:none}.task.done{background:#eaf8f0;border-color:#b9e4ca}.task.done .tasktext{text-decoration:line-through;color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:11px}button{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eef0f4}.danger{background:#fff0f0;color:#b42318}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);white-space:nowrap}small{color:var(--muted)}
+@media(max-width:600px){.row{grid-template-columns:1fr}.card{padding:14px}}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="hero">
-  <header>
-    <div class="eyebrow">Banking Exam Preparation</div>
-    <h1>Daily Target</h1>
-    <p class="subtitle">6 August — 31 August 2026</p>
-  </header>
-</div>
-<div class="celebration" id="message"></div>
+<header><div class="wrap"><h1>Daily Target</h1><div class="sub"><span class="date" id="today"></span> · Banking Exam Preparation</div><div class="progress"><div class="bar" id="bar"></div></div><small id="completion">0% complete</small></div></header>
+<main class="wrap">
+<section class="card"><h2>Today's Targets</h2><div id="tasks"></div>
+<label>Add a target</label><div class="row"><input id="newTask" placeholder="e.g. 30 DI questions"><button class="primary" onclick="addTask()">Add target</button></div></section>
 
-  <div class="datebar">
-    <button id="prev" aria-label="Previous day">←</button>
-    <select id="dateSelect" aria-label="Select date"></select>
-    <button id="next" aria-label="Next day">→</button>
-    <button class="today-btn" id="today">Today</button>
-  </div>
+<section class="card"><h2>Today's Performance</h2><div class="stats">
+<div class="stat"><b id="doneCount">0</b><small>Done</small></div><div class="stat"><b id="targetCount">0</b><small>Targets</small></div><div class="stat"><b id="accuracyView">—</b><small>Accuracy</small></div></div>
+<div class="row"><div><label>Questions attempted</label><input id="attempted" type="number" min="0"></div><div><label>Correct</label><input id="correct" type="number" min="0"></div></div>
+<div class="row"><div><label>Study time (minutes)</label><input id="minutes" type="number" min="0"></div><div><label>Mock/Test score</label><input id="score" placeholder="e.g. 72/100"></div></div>
+<label>Notes / mistakes to revisit</label><textarea id="notes" placeholder="What went well? What needs revision?"></textarea>
+<div class="actions"><button class="primary" onclick="save()">Save today's record</button></div><small id="saved"></small></section>
 
-  <div class="progress-card">
-    <div class="progress-top">
-      <div>
-        <div class="progress-label">Selected day's progress</div>
-        <div class="progress-number" id="progressText">0 / 8</div>
-      </div>
-      <div id="status">Not started</div>
-    </div>
-    <div class="bar"><div class="fill" id="fill"></div></div>
-  </div>
-
-  <div id="tasks"></div>
-
-  <div class="actions">
-    <button id="reset" class="danger">Reset this day</button>
-    <button id="exportBtn">Export all progress</button>
-    <button id="importBtn">Import progress</button>
-    <input id="importFile" type="file" accept=".json,application/json" hidden>
-  </div>
-
-  <div class="note">
-    Your checklist is saved automatically in this browser. Use the date selector or ← / → buttons to revisit any previous date and see exactly what you completed that day.
-  </div>
-  <div class="streak-card">
-    <div>
-      <div class="streak-number" id="streakNumber">🔥 0</div>
-      <div class="streak-label">current complete-day streak</div>
-    </div>
-    <div class="best">
-      <div class="streak-number" id="bestStreak">0</div>
-      <div class="streak-label">best streak</div>
-    </div>
-  </div>
-
-  <div class="exam-card">
-    <div class="exam-title">🎯 Exam Countdown</div>
-    <div id="examCountdown"></div>
-  </div>
-
-  <div class="history">Progress is stored separately for every date from 6–31 August.</div>
-</div>
+<section class="card"><h2>Progress History</h2><div id="history"></div>
+<div class="actions"><button class="secondary" onclick="exportData()">Export records</button><button class="secondary" onclick="document.getElementById('importFile').click()">Import records</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
+<small>Records stay in this browser. Export a backup if you change phone/browser.</small></section>
+</main>
 
 <script>
-const dates = [];
-for (let d = 6; d <= 31; d++) dates.push(`2026-08-${String(d).padStart(2,'0')}`);
-
-const sections = [
-  {title: "PRE", tasks: [
-    ["pre_mock", "1 mock / sectional"]
-  ]},
-  {title: "QUANT", tasks: [
-    ["quant_arithmetic", "25 Arithmetic"]
-  ]},
-  {title: "MAINS — QUANT", tasks: [
-    ["guidely", "Guidely Questions"],
-    ["detailed_video", "Detailed Video"]
-  ]},
-  {title: "REASONING", tasks: [
-    ["reasoning_aot", "1 AOT Mains Class"]
-  ]},
-  {title: "ENGLISH", tasks: [
-    ["english_aeon", "1 Article of AEON"],
-    ["english_video", "Video Lecture — 30 mins"]
-  ]},
-  {title: "GA", tasks: [
-    ["ga_notes", "1.5 hrs Notes"],
-    ["ga_revision", "30 mins Revision"]
-  ]}
-];
-const allTasks = sections.flatMap(s => s.tasks);
-const total = allTasks.length;
-const key = date => "dailyTarget_" + date;
-
-let selected = dates[0];
-
-function formatDate(iso) {
-  const [y,m,d] = iso.split("-").map(Number);
-  return new Intl.DateTimeFormat("en-IN", {weekday:"long", day:"numeric", month:"long"}).format(new Date(y,m-1,d));
+const KEY="bankingDailyTracker_v1";
+const defaults=["Quant — daily practice","Reasoning — daily practice","English — daily practice","GA / Banking Awareness — daily revision","Mock / sectional test"];
+const key=()=>new Date().toISOString().slice(0,10);
+const pretty=k=>new Date(k+"T00:00:00").toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+function db(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+function today(){let x=db(),k=key();if(!x[k]){x[k]={tasks:defaults.map((text,i)=>({text,done:false,id:Date.now()+i})),attempted:"",correct:"",minutes:"",score:"",notes:""};localStorage.setItem(KEY,JSON.stringify(x))}return x[k]}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function render(){
+ let x=today(),k=key();document.getElementById("today").textContent=pretty(k);
+ document.getElementById("tasks").innerHTML=x.tasks.map((t,i)=>`<div class="task ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggle(${i})"><div class="tasktext" style="flex:1">${esc(t.text)}</div><button class="danger" onclick="del(${i})">×</button></div>`).join("");
+ ["attempted","correct","minutes","score","notes"].forEach(id=>document.getElementById(id).value=x[id]||""); stats();history()
 }
-
-function load(date) {
-  try { return JSON.parse(localStorage.getItem(key(date)) || "{}"); }
-  catch { return {}; }
-}
-function save(date, state) { localStorage.setItem(key(date), JSON.stringify(state)); }
-
-function render() {
-  const state = load(selected);
-  const select = document.getElementById("dateSelect");
-  select.innerHTML = dates.map(d => `<option value="${d}">${formatDate(d)}</option>`).join("");
-  select.value = selected;
-
-  const wrap = document.getElementById("tasks");
-  wrap.innerHTML = sections.map(section => `
-    <div class="section">
-      <div class="section-title">${section.title}</div>
-      ${section.tasks.map(([id,text]) => {
-        const checked = !!state[id];
-        return `<div class="task ${checked ? "done" : ""}">
-          <input type="checkbox" id="${id}" data-task="${id}" ${checked ? "checked" : ""}>
-          <label for="${id}">${text}</label>
-        </div>`;
-      }).join("")}
-    </div>
-  `).join("");
-
-  wrap.querySelectorAll("input[data-task]").forEach(cb => {
-    cb.addEventListener("change", e => {
-      const s = load(selected);
-      s[e.target.dataset.task] = e.target.checked;
-      save(selected, s);
-      render();
-    });
-  });
-
-  const completed = allTasks.filter(([id]) => state[id]).length;
-  document.getElementById("progressText").textContent = `${completed} / ${total}`;
-
-  const msg = document.getElementById("message");
-  if (completed === total) {
-    msg.className = "celebration show";
-    msg.innerHTML = "<strong>🎉 Outstanding! Target completed.</strong>Perfect work. Keep this momentum going.";
-  } else if (completed === 0) {
-    msg.className = "celebration show";
-    msg.innerHTML = "<strong>💪 Fresh day, fresh start.</strong>Every completed task moves you closer. Start with one.";
-  } else {
-    msg.className = "celebration show";
-    msg.innerHTML = `<strong>🔥 ${completed}/${total} done — keep going!</strong>${total-completed} task${total-completed === 1 ? "" : "s"} left. Tomorrow is another chance to push the score higher.`;
-  }
-
-  const examDates = [
-    ["IBPS PO Prelims", "2026-08-22"],
-    ["IBPS PO Mains", "2026-10-04"],
-    ["SBI PO Mains", "2026-09-12"],
-    ["RRB PO Prelims", "2026-11-21"],
-    ["RRB PO Mains", "2026-12-20"]
-  ];
-  const [yy,mm,dd] = selected.split("-").map(Number);
-  const selectedDate = new Date(yy, mm-1, dd);
-  selectedDate.setHours(0,0,0,0);
-  document.getElementById("examCountdown").innerHTML = examDates.map(([name, iso]) => {
-    const [y,m,d] = iso.split("-").map(Number);
-    const exam = new Date(y,m-1,d);
-    exam.setHours(0,0,0,0);
-    const days = Math.ceil((exam - selectedDate) / 86400000);
-    let label = days > 0 ? `${days} day${days === 1 ? "" : "s"} to go` :
-                days === 0 ? "🔥 TODAY" : "Exam passed";
-    return `<div class="exam-row">
-      <div><div class="exam-name">${name}</div><div class="exam-date">${d} ${new Intl.DateTimeFormat("en-IN",{month:"long"}).format(exam)} ${y}</div></div>
-      <div class="days">${label}</div>
-    </div>`;
-  }).join("");
-  const complete = d => {
-    const s = load(d);
-    return allTasks.every(([id]) => !!s[id]);
-  };
-  const idx = dates.indexOf(selected);
-  let current = complete(selected) ? 1 : 0;
-  for (let i = idx - 1; i >= 0 && complete(dates[i]); i--) current++;
-  let best = 0, run = 0;
-  dates.forEach(d => {
-    if (complete(d)) { run++; best = Math.max(best, run); }
-    else run = 0;
-  });
-  document.getElementById("streakNumber").textContent = `🔥 ${current}`;
-  document.getElementById("bestStreak").textContent = best;
-
-  document.getElementById("fill").style.width = `${completed / total * 100}%`;
-  document.getElementById("status").textContent =
-    completed === 0 ? "Not started" : completed === total ? "✓ Complete" : `${total-completed} remaining`;
-
-  document.title = `Daily Target — ${formatDate(selected)}`;
-}
-
-function move(delta) {
-  const i = dates.indexOf(selected);
-  selected = dates[Math.max(0, Math.min(dates.length-1, i + delta))];
-  render();
-}
-
-document.getElementById("dateSelect").addEventListener("change", e => { selected = e.target.value; render(); });
-document.getElementById("prev").addEventListener("click", () => move(-1));
-document.getElementById("next").addEventListener("click", () => move(1));
-document.getElementById("today").addEventListener("click", () => {
-  const now = new Date();
-  const iso = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  selected = dates.includes(iso) ? iso : dates[0];
-  render();
-});
-document.getElementById("reset").addEventListener("click", () => {
-  if (confirm(`Reset all tasks for ${formatDate(selected)}?`)) {
-    localStorage.removeItem(key(selected));
-    render();
-  }
-});
-
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const backup = {};
-  dates.forEach(d => {
-    const state = load(d);
-    if (Object.keys(state).length) backup[d] = state;
-  });
-  const blob = new Blob([JSON.stringify({
-    app: "Daily Target — August 2026",
-    exportedAt: new Date().toISOString(),
-    progress: backup
-  }, null, 2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "daily-target-august-2026-progress.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-});
-
-document.getElementById("importBtn").addEventListener("click", () => {
-  document.getElementById("importFile").click();
-});
-
-document.getElementById("importFile").addEventListener("change", e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const data = JSON.parse(reader.result);
-      const progress = data.progress || data;
-      dates.forEach(d => {
-        if (progress[d]) save(d, progress[d]);
-      });
-      alert("Progress restored successfully.");
-      render();
-    } catch {
-      alert("That backup file could not be read.");
-    }
-    e.target.value = "";
-  };
-  reader.readAsText(file);
-});
-
-// Make the standalone file installable where the browser permits local-file PWAs.
-const manifest = {
-  name: "Daily Target — August 2026",
-  short_name: "Daily Target",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#f5f7fb",
-  theme_color: "#315efb",
-  description: "Banking exam daily target tracker"
-};
-const manifestBlob = new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"});
-document.getElementById("manifestLink").href = URL.createObjectURL(manifestBlob);
-
+function fields(){let x=db()[key()];["attempted","correct","minutes","score","notes"].forEach(id=>x[id]=document.getElementById(id).value);let d=db();d[key()]=x;localStorage.setItem(KEY,JSON.stringify(d))}
+function save(){fields();document.getElementById("saved").textContent="✓ Saved at "+new Date().toLocaleTimeString();stats();history()}
+function toggle(i){let d=db();d[key()].tasks[i].done=!d[key()].tasks[i].done;localStorage.setItem(KEY,JSON.stringify(d));render()}
+function del(i){let d=db();d[key()].tasks.splice(i,1);localStorage.setItem(KEY,JSON.stringify(d));render()}
+function addTask(){let e=document.getElementById("newTask"),t=e.value.trim();if(!t)return;let d=db();d[key()].tasks.push({text:t,done:false,id:Date.now()});localStorage.setItem(KEY,JSON.stringify(d));e.value="";render()}
+function stats(){let x=today(),n=x.tasks.length,done=x.tasks.filter(t=>t.done).length,p=n?Math.round(done/n*100):0,a=+x.attempted,c=+x.correct;document.getElementById("doneCount").textContent=done;document.getElementById("targetCount").textContent=n;document.getElementById("bar").style.width=p+"%";document.getElementById("completion").textContent=p+"% complete";document.getElementById("accuracyView").textContent=a?Math.round(c/a*100)+"%":"—"}
+function history(){let d=db(),ks=Object.keys(d).sort().reverse();document.getElementById("history").innerHTML=ks.length?`<table><tr><th>Date</th><th>Completion</th><th>Accuracy</th><th>Time</th><th>Score</th></tr>${ks.map(k=>{let x=d[k],n=x.tasks.length,z=x.tasks.filter(t=>t.done).length,a=+x.attempted;return`<tr><td>${pretty(k)}</td><td>${n?Math.round(z/n*100):0}%</td><td>${a?Math.round((+x.correct/a)*100)+"%":"—"}</td><td>${x.minutes||0} min</td><td>${esc(x.score||"—")}</td></tr>`}).join("")}</table>`:"<small>No records yet.</small>"}
+function exportData(){let b=new Blob([JSON.stringify(db(),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="banking-daily-progress.json";a.click()}
+function importData(e){let r=new FileReader();r.onload=()=>{try{localStorage.setItem(KEY,JSON.stringify(JSON.parse(r.result)));render();alert("Records imported.")}catch(_){alert("Invalid backup file.")}};r.readAsText(e.target.files[0])}
+["attempted","correct","minutes","score","notes"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{fields();stats()}));
 render();
 </script>
 </body>
